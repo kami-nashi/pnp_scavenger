@@ -1,19 +1,27 @@
 #!/bin/bash
 
+do_a_search() {
+
+for i in `ls cookies`; 
+do echo $i; 
+curl -b cookies/$i --silent "http://www.carolinapicknpull.com/inventory/?make=${2}&model=${1}&inventory-search=Search" > /tmp/cfpnp_list.html && cat /tmp/cfpnp_list.html | grep -i $1 | grep -v \<option | cat /tmp/cfpnp_list.html | grep -i $1 | grep -v \<option | html2text | tr -d '|' | $3;
+done
+
+}
+
 echo -e "Searching Cape Fear Pick-N-Pull Yards for Eclipse Types..."
-
-for i in `ls cookies`; do echo $i; curl -b cookies/$i --silent "http://www.carolinapicknpull.com/inventory/?make=mitsubishi&model=eclipse&inventory-search=Search" > /tmp/cfpnp_list.html && cat /tmp/cfpnp_list.html | grep -i eclipse | grep -v \<option | cat /tmp/cfpnp_list.html | grep -i eclipse | grep -v \<option | html2text | egrep "19[90-99]" | tr -d '|'; done
-
+do_a_search "eclipse" "mitsubishi" "egrep 19[90..99]"
 echo -e "Searching Cape Fear Pick-N-Pull Yards for Talon Types..."
-for i in `ls cookies`; do echo $i; curl -b cookies/$i --silent "http://www.carolinapicknpull.com/inventory/?make=eagle&model=talon&inventory-search=Search" > /tmp/cfpnp_list.html && cat /tmp/cfpnp_list.html | grep -i talon | grep -v \<option | cat /tmp/cfpnp_list.html | grep -i talon | grep -v \<option | html2text | egrep "19[90-99]" | tr -d '|'; done
-
+do_a_search "talon" "eagle" "egrep 19[90..99]"
 echo -e "Searching Cape Fear Pick-N-Pull Yards for Focus Friends..."
-for i in `ls cookies`; do echo $i; curl -b cookies/$i --silent "http://www.carolinapicknpull.com/inventory/?make=ford&model=focus&inventory-search=Search" > /tmp/cfpnp_list.html && cat /tmp/cfpnp_list.html | grep -i focus | grep -v \<option | cat /tmp/cfpnp_list.html | grep -i focus | grep -v \<option | html2text | grep -e20{08..11} | tr -d '|'; done
+do_a_search "focus" "ford" "egrep 20[08..11]"
+echo -e "Searching Cape Fear Pick-N-Pull Yards for Mighty Max's..."
+do_a_search "mighty+max" "mitsubishi" "egrep 19[90..99]"
+echo -e "Searching Cape Fear Pick-N-Pull Yards for FD's..."
+do_a_search "mazda-rx7" "mazda" "grep 94"
+echo -e "Searching Cape Fear Pick-N-Pull Yards for rogue Rogues..."
+do_a_search "rogue" "nissan" "egrep 20[08..12]"
 
-echo -e "Searching Cape Fear Pick-N-Pull Yards for RX-7's..."
-for i in `ls cookies`; do echo $i; curl -b cookies/$i --silent "http://www.carolinapicknpull.com/inventory/?make=mitsubishi&model=mighty+max&inventory-search=Search" > /tmp/cfpnp_list.html && cat /tmp/cfpnp_list.html | grep -i max | grep -v \<option | cat /tmp/cfpnp_list.html | grep -i max | grep -v \<option | html2text | egrep "19[90-99]" | tr -d '|'; done
-
-echo -e "Searching Cape Fear Pick-N-Pull Yards for Mighty Max Trucks..."
-for i in `ls cookies`; do echo $i; curl -b cookies/$i --silent "http://www.carolinapicknpull.com/inventory/?make=mazda&model=mazda+rx7&inventory-search=Search" > /tmp/cfpnp_list.html && cat /tmp/cfpnp_list.html | grep -i rx7 | grep -v \<option | cat /tmp/cfpnp_list.html | grep -i rx7 | grep -v \<option | html2text | egrep "19[90-99]" | tr -d '|'; done
+#for i in `ls cookies`; do echo $i; curl -b cookies/$i --silent "http://www.carolinapicknpull.com/inventory/?make=ford&model=focus&inventory-search=Search" > /tmp/cfpnp_list.html && cat /tmp/cfpnp_list.html | grep -i focus | grep -v \<option | cat /tmp/cfpnp_list.html | grep -i focus | grep -v \<option | html2text | grep -e20{08..11} | tr -d '|'; done
 
 echo -e "Search Complete!"

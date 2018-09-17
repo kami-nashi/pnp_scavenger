@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-#requires (pip3) BeautifulSoup bs4 lxml requests
+
+# sudo pip3 install beautifulsoup4 requests lxml
 
 from __future__ import print_function
 
 from bs4 import BeautifulSoup
+import cookiejar, cookies
 import requests
 import sys, os
 
@@ -14,11 +16,15 @@ def fetch_html(make, model):
     # that says to use a RequestCookieJar: that's apparently only for
     # setting cookies, not fetching them. Instead, use a Session:
     session = requests.Session()
-
-    r = session.get(url)
+    session.cookies.set('cpnp-location','9')
+    #r = session.get(url)
     # Searches don't work the first time; the first time it just sets
     # a cookie, then the second time it actually works.
     r = session.get(url)
+
+    #print (session.get(url))
+    #cookies = requests.utils.cookiejar_from_dict(requests.utils.dict_from_cookiejar(session.cookies))
+    #session.cookies.set('NID', 'abc', domain='.google.co.uk', path='/')
 
     return r.text
 
@@ -62,4 +68,3 @@ if __name__ == '__main__':
     print(fmt % ('Make', 'Model', 'Year', 'Row', 'Date-In'))
     for match in matches:
         print(fmt % tuple(match))
-

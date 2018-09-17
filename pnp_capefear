@@ -10,23 +10,23 @@ import requests
 import sys, os
 
 def fetch_html(make, model):
+    # each digit is a location code used by the cookies
+    locations = [3,9,10]
+    # a list of responses
+    results = []
     url = 'http://www.carolinapicknpull.com/inventory/?make=%s&model=%s&inventory-search=Search' % (make, model)
 
-    # To handle cookies with requests, ignore the Requests documentation
-    # that says to use a RequestCookieJar: that's apparently only for
-    # setting cookies, not fetching them. Instead, use a Session:
-    session = requests.Session()
-    session.cookies.set('cpnp-location','3')
-    #r = session.get(url)
-    # Searches don't work the first time; the first time it just sets
-    # a cookie, then the second time it actually works.
-    r = session.get(url)
 
-    #print (session.get(url))
-    #cookies = requests.utils.cookiejar_from_dict(requests.utils.dict_from_cookiejar(session.cookies))
-    #session.cookies.set('NID', 'abc', domain='.google.co.uk', path='/')
+    for i in locations:
+      # To handle cookies with requests, ignore the Requests documentation
+      # that says to use a RequestCookieJar: that's apparently only for
+      # setting cookies, not fetching them. Instead, use a Session:
+      session = requests.Session()
+      session.cookies.set('cpnp-location',i)
+      r = session.get(url)
+      results.append(r.text)
 
-    return r.text
+    return results
 
 def do_search(soup, model):
     # case-insensitive search:

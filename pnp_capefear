@@ -9,24 +9,17 @@ import cookiejar, cookies
 import requests
 import sys, os
 
-def fetch_html(make, model):
-    # each digit is a location code used by the cookies
-    locations = [3,9,10]
-    # a list of responses
-    results = []
+def fetch_html(make, model,i):
     url = 'http://www.carolinapicknpull.com/inventory/?make=%s&model=%s&inventory-search=Search' % (make, model)
 
-
-    for i in locations:
       # To handle cookies with requests, ignore the Requests documentation
       # that says to use a RequestCookieJar: that's apparently only for
       # setting cookies, not fetching them. Instead, use a Session:
-      session = requests.Session()
-      session.cookies.set('cpnp-location',i)
-      r = session.get(url)
-      results.append(r.text)
+    session = requests.Session()
+    session.cookies.set('cpnp-location',i)
+    r = session.get(url)
 
-    return results
+    return r.text
 
 def do_search(soup, model):
     # case-insensitive search:
@@ -57,14 +50,24 @@ if __name__ == '__main__':
         sys.exit(1)
     make = sys.argv[1]
     model = sys.argv[2]
-    html = fetch_html(make, model)
-    soup = BeautifulSoup(html, 'lxml')
-    matches = do_search(soup, model)
-    if not matches:
-        print("No matches")
-        sys.exit(0)
+    locations = ['3','9','10']
+    for i in locations:
+      if i == '3':
+          location = 'Cape Fear PickNPull'
+      elif i == '9':
+          location = 'Grand Strand PickNPull'
+      elif i == '10':
+          location = 'Sand Hills PickNPull'
 
-    fmt = '%15s %10s %4s %6s %11s'
-    print(fmt % ('Make', 'Model', 'Year', 'Row', 'Date-In'))
-    for match in matches:
-        print(fmt % tuple(match))
+      html = fetch_html(make, model, i)
+      soup = BeautifulSoup(html, 'lxml')
+      matches = do_search(soup, model)
+      if not matches:
+          print("No matches")
+          sys.exit(0)
+
+      fmt = '%15s %10s %4s %6s %11s'
+      print(location)
+      print(fmt % ('Make', 'Model', 'Year', 'Row', 'Date-In'))
+      for match in matches:
+          print(fmt % tuple(match))

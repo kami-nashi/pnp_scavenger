@@ -19,6 +19,7 @@ parser.add_argument('-l', '--location', type=str, default=all, help='Specify the
 parser.add_argument('-ma', '--make', type=str, default=all, help='Specify the make')
 parser.add_argument('-mo', '--model', type=str, default=all, help='Specify the model')
 
+location_list = args.l.split(',') # ['1','2','3','4']
 
 def fetch_html(make, model,i):
     url = 'http://www.carolinapicknpull.com/inventory/?make=%s&model=%s&inventory-search=Search' % (make, model)
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     #make = sys.argv[1]
     #model = sys.argv[2]
     #locations = ['3','9','10']
-    for i in location:
+    for i in location_list:
       if i == '3':
           location = 'Cape Fear PickNPull'
       elif i == '9':

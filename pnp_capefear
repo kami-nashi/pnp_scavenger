@@ -8,12 +8,13 @@ from bs4 import BeautifulSoup
 import cookiejar, cookies
 import requests
 import sys, os
+import argparse
 
-location_choices = list(configured_envs)
-location_choices.append('all')
-location_choices.append('none')
+#location_choices = list(configured_envs)
+#location_choices.append('all')
+#location_choices.append('none')
 
-parser = argparse.ArgumentParser(description='Do UCS action for specied envs.')
+parser = argparse.ArgumentParser(description='Search Places.')
 parser.add_argument('-l', '--location', type=str, default=all, help='Specify the location ID to search')
 parser.add_argument('-ma', '--make', type=str, default=all, help='Specify the make')
 parser.add_argument('-mo', '--model', type=str, default=all, help='Specify the model')
@@ -79,7 +80,8 @@ if __name__ == '__main__':
       html = fetch_html(make, model, i)
       soup = BeautifulSoup(html, 'lxml')
       matches = do_search(soup, model)
-      if not matches:
+      if not matches603403
+
           print("No matches")
           sys.exit(0)
 

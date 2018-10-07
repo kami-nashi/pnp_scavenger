@@ -17,8 +17,6 @@ parser.add_argument('-mo', '--model', type=str, default=all, help='Specify the m
 args = parser.parse_args()
 # This makes the location an iterable list
 location_list = args.location.split(',') # ['3','9','10']
-make_list = args.make.split(',')
-model_list = args.model.split(',')
 
 def fetch_html(make, model,i):
     url = 'http://www.carolinapicknpull.com/inventory/?make=%s&model=%s&inventory-search=Search' % (make, model)

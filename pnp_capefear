@@ -9,6 +9,16 @@ import cookiejar, cookies
 import requests
 import sys, os
 
+location_choices = list(configured_envs)
+location_choices.append('all')
+location_choices.append('none')
+
+parser = argparse.ArgumentParser(description='Do UCS action for specied envs.')
+parser.add_argument('-l', '--location', type=str, default=all, help='Specify the location ID to search')
+parser.add_argument('-ma', '--make', type=str, default=all, help='Specify the make')
+parser.add_argument('-mo', '--model', type=str, default=all, help='Specify the model')
+
+
 def fetch_html(make, model,i):
     url = 'http://www.carolinapicknpull.com/inventory/?make=%s&model=%s&inventory-search=Search' % (make, model)
 
@@ -44,14 +54,21 @@ def do_search(soup, model):
     return matches
 
 if __name__ == '__main__':
+
+    args = parser.parse_args()
+    location = args.location
+    model = args.model
+    make = args.make
+
+
     # Pass the desired make and model as arguments
-    if len(sys.argv) < 3:
-        print("Usage: %s make model" % os.path.basename(sys.argv[0]))
-        sys.exit(1)
-    make = sys.argv[1]
-    model = sys.argv[2]
-    locations = ['3','9','10']
-    for i in locations:
+    #if len(sys.argv) < 3:
+    #    print("Usage: %s make model" % os.path.basename(sys.argv[0]))
+    #    sys.exit(1)
+    #make = sys.argv[1]
+    #model = sys.argv[2]
+    #locations = ['3','9','10']
+    for i in location:
       if i == '3':
           location = 'Cape Fear PickNPull'
       elif i == '9':

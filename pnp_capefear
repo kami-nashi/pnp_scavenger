@@ -10,16 +10,15 @@ import requests
 import sys, os
 import argparse
 
-#location_choices = list(configured_envs)
-#location_choices.append('all')
-#location_choices.append('none')
-
 parser = argparse.ArgumentParser(description='Search Places.')
 parser.add_argument('-l', '--location', type=str, default=all, help='Specify the location ID to search')
 parser.add_argument('-ma', '--make', type=str, default=all, help='Specify the make')
 parser.add_argument('-mo', '--model', type=str, default=all, help='Specify the model')
 args = parser.parse_args()
-location_list = args.l.split(',') # ['1','2','3','4']
+# This makes the location an iterable list
+location_list = args.location.split(',') # ['3','9','10']
+make_list = args.make.split(',')
+model_list = args.model.split(',')
 
 def fetch_html(make, model,i):
     url = 'http://www.carolinapicknpull.com/inventory/?make=%s&model=%s&inventory-search=Search' % (make, model)
@@ -59,17 +58,11 @@ if __name__ == '__main__':
 
     #args = parser.parse_args()
     location = args.location
-    model = args.model
-    make = args.make
-
-
-    # Pass the desired make and model as arguments
-    #if len(sys.argv) < 3:
-    #    print("Usage: %s make model" % os.path.basename(sys.argv[0]))
-    #    sys.exit(1)
-    #make = sys.argv[1]
-    #model = sys.argv[2]
-    #locations = ['3','9','10']
+    #model = args.model
+    #make = args.make
+    model = make_list
+    make = model_list
+    
     for i in location_list:
       if i == '3':
           location = 'Cape Fear PickNPull'

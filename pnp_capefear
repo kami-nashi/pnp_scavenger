@@ -56,13 +56,11 @@ def do_search(soup, model):
 
 if __name__ == '__main__':
 
-    #args = parser.parse_args()
     location = args.location
-    #model = args.model
-    #make = args.make
-    model = make_list
-    make = model_list
-    
+    model = args.model
+    make = args.make
+
+
     for i in location_list:
       if i == '3':
           location = 'Cape Fear PickNPull'

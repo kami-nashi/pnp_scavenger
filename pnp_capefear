@@ -80,7 +80,7 @@ if __name__ == '__main__':
       html = fetch_html(make, model, i)
       soup = BeautifulSoup(html, 'lxml')
       matches = do_search(soup, model)
-      if not matches603403
+      if not matches:
 
           print("No matches")
           sys.exit(0)

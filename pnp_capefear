@@ -14,9 +14,11 @@ parser = argparse.ArgumentParser(description='Search Places.')
 parser.add_argument('-l', '--location', type=str, default=all, help='Specify the location ID to search')
 parser.add_argument('-ma', '--make', type=str, default=all, help='Specify the make')
 parser.add_argument('-mo', '--model', type=str, default=all, help='Specify the model')
+parser.add_argument('-y', '--years', type=str, default=all, help='Specify the year start and stop range')
 args = parser.parse_args()
 # This makes the location an iterable list
 location_list = args.location.split(',') # ['3','9','10']
+year_list = args.years.split(',')
 
 def fetch_html(make, model,i):
     url = 'http://www.carolinapicknpull.com/inventory/?make=%s&model=%s&inventory-search=Search' % (make, model)
@@ -30,9 +32,18 @@ def fetch_html(make, model,i):
 
     return r.text
 
-def do_search(soup, model):
+def do_search(soup, model, years):
     # case-insensitive search:
     model = model.lower()
+    # get the lo/hi values for the range of years
+    year_range = years
+    # break out the values, clean them for math use
+    year_int1 = int(year_range[0])
+    year_int2 = int(year_range[1])
+    # increment the hi year +1 to get a full usable range
+    year_int2 += 1
+    # reassemble values into a range for iteration
+    iyears = range(year_int1,year_int2)
 
     table = soup.find("table", class_="inventoryData")
     if not table:
@@ -46,9 +57,11 @@ def do_search(soup, model):
             continue
 
         vals = [ td.text for td in tr.findAll('td') ]
-
-        if vals[1].lower() == model and vals[2].lower() == 2008:
-            matches.append(vals)
+        for i in iyears:
+            find_year = str(i)
+            # if we get an exect match for model AND year, do a thing
+            if vals[1].lower() == model and vals[2] == find_year:
+              matches.append(vals)
 
     return matches
 
@@ -57,8 +70,9 @@ if __name__ == '__main__':
     location = args.location
     model = args.model
     make = args.make
+    years = year_list
 
-
+    # mate numerical ID's to human usable ID's in printing
     for i in location_list:
       if i == '3':
           location = 'Cape Fear PickNPull'
@@ -69,7 +83,7 @@ if __name__ == '__main__':
 
       html = fetch_html(make, model, i)
       soup = BeautifulSoup(html, 'lxml')
-      matches = do_search(soup, model)
+      matches = do_search(soup, model, years)
       if not matches:
 
           print("No matches")

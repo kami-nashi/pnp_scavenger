@@ -47,7 +47,7 @@ def do_search(soup, model):
 
         vals = [ td.text for td in tr.findAll('td') ]
 
-        if vals[1].lower() == model:
+        if vals[1].lower() == model and val[2].lower() == 2008:
             matches.append(vals)
 
     return matches

@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+
+# sudo pip3 install beautifulsoup4 requests lxml
+
+from __future__ import print_function
+
+from bs4 import BeautifulSoup
+import requests
+import sys, os
+import argparse
+
+def fetch_html():
+    # define the url for LKQ
+    url = 'http://www.lkqpickyourpart.com/DesktopModules/pyp_vehicleInventory/getVehicleInventory.aspx?page=0&filter=%s&sp=&cl=&carbuyYardCode=%s&pageSize=10&language=en-US' % ('mitsubishi+eclipse','1168')
+    req = requests.get(url)
+    # diagnostic raw outputs
+    # print('req.content\n\n', req.content, '\n\nurl\n\n', url, '\n\n')
+    content = req.text
+    return content
+
+def do_search(soup):
+
+    content = fetch_html()
+    soup = BeautifulSoup(content, 'html.parser')
+    # diagnostic output of stull we found
+    print(soup.prettify())
+
+    print('---------------------------------------------------------------')
+    # print the P's ....
+    content_p= soup.find_all('p')
+    for p in content_p:
+      print(p)
+
+    print('---------------------------------------------------------------')
+
+if __name__ == '__main__':
+
+  html = fetch_html()
+  soup = BeautifulSoup(html, 'lxml')
+  matches = do_search(soup)

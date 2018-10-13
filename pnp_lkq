@@ -20,7 +20,36 @@ args = parser.parse_args()
 location_list = args.location.split(',') # ['3','9','10']
 year_list = args.years.split(',')
  
-def fetch_html(make, model, years, location_list):
+def fetch_html(make, model, y, l):
+
+#    search = make+'+'+model
+#    locations = location_list
+#    year_range = years
+#    # break out the values, clean them for math use
+#    year_int1 = int(year_range[0])
+#    year_int2 = int(year_range[1])
+#    # increment the hi year +1 to get a full usable range
+#    year_int2 += 1
+#    # reassemble values into a range for iteration
+#    iyears = range(year_int1,year_int2)
+
+    # define the url for LKQ
+#    for i in locations:
+#      for y in iyears:
+    yearstr = str(y)
+    search = make+'+'+model+'+'+yearstr
+    location = str(l)
+    url = 'http://www.lkqpickyourpart.com/DesktopModules/pyp_vehicleInventory/getVehicleInventory.aspx?page=0&filter=%s&sp=&cl=&carbuyYardCode=%s&pageSize=1000&language=en-US' % (search,location)
+    req = requests.get(url)
+    #print(url)
+    #  diagnostic raw outputs
+    #    print('req.content\n\n', req.content, '\n\nurl\n\n', url, '\n\n')
+    content = req.text
+    #    print(searchfull, 'and', i)
+
+    return content
+ 
+def do_search(make, model, years, location_list):
 
     search = make+'+'+model
     locations = location_list
@@ -34,46 +63,44 @@ def fetch_html(make, model, years, location_list):
     iyears = range(year_int1,year_int2)
 
     # define the url for LKQ
-    for i in locations:
+    for l in locations:
       for y in iyears:
-        yearstr = str(y)
-        searchfull = search+'+'+yearstr
-        url = 'http://www.lkqpickyourpart.com/DesktopModules/pyp_vehicleInventory/getVehicleInventory.aspx?page=0&filter=%s&sp=&cl=&carbuyYardCode=%s&pageSize=1000&language=en-US' % (searchfull,i)
-        req = requests.get(url)
-    #    print(url)
-    #  diagnostic raw outputs
-    #  print('req.content\n\n', req.content, '\n\nurl\n\n', url, '\n\n')
-        content = req.text
-    #    print(searchfull, 'and', i)
-
-    return content
+        content = fetch_html(make, model, y, l)
+#        print(content)
+        soup = BeautifulSoup(content, 'html.parser')
+        # diagnostic output of stull we found
+        #print(soup.prettify())
+#        for i in location_list:
+#          if i == '1168':
+#            location = 'LKQ of Raleigh'
+#          elif i == '1142':
+#            location = 'LKQ of Durham'
+#          elif i == '1226':
+#            location = 'LKQ of Greensboro'
+#          elif i == '1227':
+#            location = 'LKQ of Greenville'
  
-def do_search(make, model, years, location_list):
- 
-    content = fetch_html(make, model, years, location_list)
-    soup = BeautifulSoup(content, 'html.parser')
-    # diagnostic output of stull we found
-#    print(soup.prettify())
-    for i in location_list:
-      if i == '1168':
-          location = 'LKQ of Raleigh'
-      elif i == '1142':
-          location = 'LKQ of Durham'
-      elif i == '1226':
-          location = 'LKQ of Greensboro'
-      elif i == '1227':
-          location = 'LKQ of Greenville'
- 
-    print('-----------------------------------------')
-    # print the P's ....
-    content_a= soup.find_all('a')
-    for a in content_a:
-      print(location)
-      caption_soup = BeautifulSoup(a['caption'], 'html.parser')
-      caption_p = caption_soup.find_all('p')
-      for p in caption_p:
-        print(p.text)
       print('-----------------------------------------')
+    # print the P's ....
+      content_a= soup.find_all('a')
+#      print(content_a)
+      for a in content_a:     
+        if l == '1168':
+          location = 'LKQ of Raleigh'
+        elif l == '1142':
+          location = 'LKQ of Durham'
+        elif l == '1226':
+          location = 'LKQ of Greensboro'
+        elif l == '1227':
+          location = 'LKQ of Greenville'
+
+        print(location)
+        caption_soup = BeautifulSoup(a['caption'], 'html.parser')
+        caption_p = caption_soup.find_all('p')
+        for p in caption_p:
+          #print(p)
+          print(p.text)
+        print('-----------------------------------------')
  
 if __name__ == '__main__':
 

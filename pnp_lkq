@@ -69,6 +69,8 @@ def do_search(make, model, years, location_list):
           location = 'LKQ of Greensboro'
         elif l == '1227':
           location = 'LKQ of Greenville'
+        elif l == '1228':
+          location = 'LKQ of Charlotte'
         else:
           location = l
 

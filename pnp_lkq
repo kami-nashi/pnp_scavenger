@@ -22,20 +22,6 @@ year_list = args.years.split(',')
  
 def fetch_html(make, model, y, l):
 
-#    search = make+'+'+model
-#    locations = location_list
-#    year_range = years
-#    # break out the values, clean them for math use
-#    year_int1 = int(year_range[0])
-#    year_int2 = int(year_range[1])
-#    # increment the hi year +1 to get a full usable range
-#    year_int2 += 1
-#    # reassemble values into a range for iteration
-#    iyears = range(year_int1,year_int2)
-
-    # define the url for LKQ
-#    for i in locations:
-#      for y in iyears:
     yearstr = str(y)
     search = make+'+'+model+'+'+yearstr
     location = str(l)
@@ -70,17 +56,7 @@ def do_search(make, model, years, location_list):
         soup = BeautifulSoup(content, 'html.parser')
         # diagnostic output of stull we found
         #print(soup.prettify())
-#        for i in location_list:
-#          if i == '1168':
-#            location = 'LKQ of Raleigh'
-#          elif i == '1142':
-#            location = 'LKQ of Durham'
-#          elif i == '1226':
-#            location = 'LKQ of Greensboro'
-#          elif i == '1227':
-#            location = 'LKQ of Greenville'
  
-      print('-----------------------------------------')
     # print the P's ....
       content_a= soup.find_all('a')
 #      print(content_a)
@@ -97,8 +73,10 @@ def do_search(make, model, years, location_list):
         print(location)
         caption_soup = BeautifulSoup(a['caption'], 'html.parser')
         caption_p = caption_soup.find_all('p')
+
         for p in caption_p:
           #print(p)
+
           print(p.text)
         print('-----------------------------------------')
  
@@ -108,11 +86,6 @@ if __name__ == '__main__':
     model = args.model
     make = args.make
     years = year_list
-
-
-#    html = fetch_html(make, model, years, location_list)
-#    soup = BeautifulSoup(html, 'lxml')
-#    matches = do_search(soup)
 
     matches = do_search(make, model, years, location_list)
     if not matches:

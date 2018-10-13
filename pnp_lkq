@@ -38,16 +38,17 @@ def fetch_html(make, model, years, location_list):
       for y in iyears:
         yearstr = str(y)
         searchfull = search+'+'+yearstr
-        url = 'http://www.lkqpickyourpart.com/DesktopModules/pyp_vehicleInventory/getVehicleInventory.aspx?page=0&filter=%s&sp=&cl=&carbuyYardCode=%s&pageSize=10&language=en-US' % (searchfull,i)
+        url = 'http://www.lkqpickyourpart.com/DesktopModules/pyp_vehicleInventory/getVehicleInventory.aspx?page=0&filter=%s&sp=&cl=&carbuyYardCode=%s&pageSize=1000&language=en-US' % (searchfull,i)
         req = requests.get(url)
-    # diagnostic raw outputs
+    #    print(url)
+    #  diagnostic raw outputs
     #  print('req.content\n\n', req.content, '\n\nurl\n\n', url, '\n\n')
         content = req.text
     #    print(searchfull, 'and', i)
 
     return content
  
-def do_search(soup):
+def do_search(make, model, years, location_list):
  
     content = fetch_html(make, model, years, location_list)
     soup = BeautifulSoup(content, 'html.parser')
@@ -82,8 +83,10 @@ if __name__ == '__main__':
     years = year_list
 
 
-    html = fetch_html(make, model, years, location_list)
-    soup = BeautifulSoup(html, 'lxml')
-    matches = do_search(soup)
+#    html = fetch_html(make, model, years, location_list)
+#    soup = BeautifulSoup(html, 'lxml')
+#    matches = do_search(soup)
+
+    matches = do_search(make, model, years, location_list)
     if not matches:
       sys.exit(0)

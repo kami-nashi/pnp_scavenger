@@ -12,7 +12,8 @@ import argparse
 LOCATIONS = {'1168': 'LKQ of Raleigh',
              '1142': 'LKQ of Durham',
              '1226': 'LKQ of Greensboro',
-             '1227': 'LKQ of Greenville'}
+             '1227': 'LKQ of Greenville',
+             '1228': 'LKQ of Charlotte'}
 
 
 # take search parameters and make an HTTP request for the content
@@ -31,7 +32,7 @@ def do_search(make, model, year_start, year_end, locations):
         for year in range(year_start, year_end):
             content = fetch_html(make, model, year, location_id)
             soup = BeautifulSoup(content, 'html.parser')
-            # diagnostic output of stull we found
+            # diagnostic output of stuff we found
             # print(soup.prettify())
 
             #results[location_id].append(soup.find_all('a'))
@@ -44,14 +45,12 @@ def do_search(make, model, year_start, year_end, locations):
 def print_results(results):
     for location_id, items in results.items():
         for item in items:
-            print('-----------------------------------------')
-            print(LOCATIONS[location_id])
             for a in item.find_all('a'):
+                print(LOCATIONS[location_id])
                 caption_soup = BeautifulSoup(a['caption'], 'html.parser')
                 caption_p = caption_soup.find_all('p')
                 for p in caption_p:
                     print(p.text)
-                print('-----------------------------------------')
 
 
 if __name__ == '__main__':
@@ -66,7 +65,7 @@ if __name__ == '__main__':
 
     # This makes the location an iterable list
     location_list = args.location.split(',')  # ['3','9','10']
-
+    print('\n')
     matches = do_search(args.make, args.model, args.year_start, args.year_end, location_list)
     if not matches:
         sys.exit(0)

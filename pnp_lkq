@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
-#sudo pip3 install beautifulsoup4 requests lxml
- 
+# sudo pip3 install beautifulsoup4 requests lxml
+
 from __future__ import print_function
- 
+
 from bs4 import BeautifulSoup
 import requests
-import sys, os
+import sys
 import argparse
 
+<<<<<<< HEAD
 parser = argparse.ArgumentParser(description='Search Places.')
 parser.add_argument('-l', '--location', type=str, default=all, help='Specify the location ID to search')
 parser.add_argument('-ma', '--make', type=str, default=all, help='Specify the make')
@@ -84,13 +85,72 @@ def do_search(make, model, years, location_list):
           print(p.text)
         print('-----------------------------------------')
  
+=======
+LOCATIONS = {'1168': 'LKQ of Raleigh',
+             '1142': 'LKQ of Durham',
+             '1226': 'LKQ of Greensboro',
+             '1227': 'LKQ of Greenville'}
+
+
+# take search parameters and make an HTTP request for the content
+def fetch_html(make, model, year, location):
+    search_filter = '%s %s %s' % (make, model, year)
+    url = 'http://www.lkqpickyourpart.com/DesktopModules/pyp_vehicleInventory/getVehicleInventory.aspx?page=0&filter=%s&sp=&cl=&carbuyYardCode=%s&pageSize=10&language=en-US' % (search_filter, location)
+    req = requests.get(url)
+    return req.text
+
+
+# runs the correct searches based on user input
+def do_search(make, model, year_start, year_end, locations):
+    results = {}
+    for location_id in locations:
+        results[location_id] = []
+        for year in range(year_start, year_end):
+            content = fetch_html(make, model, year, location_id)
+            soup = BeautifulSoup(content, 'html.parser')
+            # diagnostic output of stull we found
+            # print(soup.prettify())
+
+            #results[location_id].append(soup.find_all('a'))
+            results[location_id].append(soup)
+
+    return results
+
+
+# take the results and display them
+def print_results(results):
+    for location_id, items in results.items():
+        for item in items:
+            print('-----------------------------------------')
+            print(LOCATIONS[location_id])
+            for a in item.find_all('a'):
+                caption_soup = BeautifulSoup(a['caption'], 'html.parser')
+                caption_p = caption_soup.find_all('p')
+                for p in caption_p:
+                    print(p.text)
+                print('-----------------------------------------')
+
+
+>>>>>>> 2018fe4ce9398a40659e27cca8009a82fdacd1e9
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Search Places.')
+    parser.add_argument('-l', '--location', type=str, default=None, required=True, help='Specify the location ID to search')
+    parser.add_argument('-ma', '--make', type=str, default=None, help='Specify the make')
+    parser.add_argument('-mo', '--model', type=str, default=None, help='Specify the model')
+    parser.add_argument('-ys', '--year-start', type=int, default=None)
+    parser.add_argument('-ye', '--year-end', type=int, default=None)
 
-    location = args.location
-    model = args.model
-    make = args.make
-    years = year_list
+    args = parser.parse_args()
 
+<<<<<<< HEAD
     matches = do_search(make, model, years, location_list)
+=======
+    # This makes the location an iterable list
+    location_list = args.location.split(',')  # ['3','9','10']
+
+    matches = do_search(args.make, args.model, args.year_start, args.year_end, location_list)
+>>>>>>> 2018fe4ce9398a40659e27cca8009a82fdacd1e9
     if not matches:
-      sys.exit(0)
+        sys.exit(0)
+
+    print_results(matches)

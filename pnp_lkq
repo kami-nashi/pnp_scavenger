@@ -9,79 +9,6 @@ import requests
 import sys
 import argparse
 
-<<<<<<< HEAD
-parser = argparse.ArgumentParser(description='Search Places.')
-parser.add_argument('-l', '--location', type=str, default=all, help='Specify the location ID to search')
-parser.add_argument('-ma', '--make', type=str, default=all, help='Specify the make')
-parser.add_argument('-mo', '--model', type=str, default=all, help='Specify the model')
-parser.add_argument('-y', '--years', type=str, default=all, help='Specify the year start and stop range')
-
-args = parser.parse_args()
-# This makes the location an iterable list
-location_list = args.location.split(',') # ['3','9','10']
-year_list = args.years.split(',')
- 
-def fetch_html(make, model, y, l):
-
-    yearstr = str(y)
-    search = make+'+'+model+'+'+yearstr
-    location = str(l)
-    url = 'http://www.lkqpickyourpart.com/DesktopModules/pyp_vehicleInventory/getVehicleInventory.aspx?page=0&filter=%s&sp=&cl=&carbuyYardCode=%s&pageSize=1000&language=en-US' % (search,location)
-    req = requests.get(url)
-    #print(url)
-    #  diagnostic raw outputs
-    #    print('req.content\n\n', req.content, '\n\nurl\n\n', url, '\n\n')
-    content = req.text
-    #    print(searchfull, 'and', i)
-
-    return content
- 
-def do_search(make, model, years, location_list):
-
-    search = make+'+'+model
-    locations = location_list
-    year_range = years
-    # break out the values, clean them for math use
-    year_int1 = int(year_range[0])
-    year_int2 = int(year_range[1])
-    # increment the hi year +1 to get a full usable range
-    year_int2 += 1
-    # reassemble values into a range for iteration
-    iyears = range(year_int1,year_int2)
-
-    # define the url for LKQ
-    for l in locations:
-      for y in iyears:
-        content = fetch_html(make, model, y, l)
-#        print(content)
-        soup = BeautifulSoup(content, 'html.parser')
-        # diagnostic output of stull we found
-        #print(soup.prettify())
- 
-    # print the P's ....
-      content_a= soup.find_all('a')
-#      print(content_a)
-      for a in content_a:     
-        if l == '1168':
-          location = 'LKQ of Raleigh'
-        elif l == '1142':
-          location = 'LKQ of Durham'
-        elif l == '1226':
-          location = 'LKQ of Greensboro'
-        elif l == '1227':
-          location = 'LKQ of Greenville'
-
-        print(location)
-        caption_soup = BeautifulSoup(a['caption'], 'html.parser')
-        caption_p = caption_soup.find_all('p')
-
-        for p in caption_p:
-          #print(p)
-
-          print(p.text)
-        print('-----------------------------------------')
- 
-=======
 LOCATIONS = {'1168': 'LKQ of Raleigh',
              '1142': 'LKQ of Durham',
              '1226': 'LKQ of Greensboro',
@@ -127,7 +54,6 @@ def print_results(results):
                 print('-----------------------------------------')
 
 
->>>>>>> 2018fe4ce9398a40659e27cca8009a82fdacd1e9
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Search Places.')
     parser.add_argument('-l', '--location', type=str, default=None, required=True, help='Specify the location ID to search')
@@ -138,14 +64,10 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-<<<<<<< HEAD
-    matches = do_search(make, model, years, location_list)
-=======
     # This makes the location an iterable list
     location_list = args.location.split(',')  # ['3','9','10']
 
     matches = do_search(args.make, args.model, args.year_start, args.year_end, location_list)
->>>>>>> 2018fe4ce9398a40659e27cca8009a82fdacd1e9
     if not matches:
         sys.exit(0)
 

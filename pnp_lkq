@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import requests
 import sys
 import argparse
+import json
 
 LOCATIONS = {'1168': 'LKQ of Raleigh',
              '1142': 'LKQ of Durham',
@@ -44,13 +45,38 @@ def do_search(make, model, year_start, year_end, locations):
 # take the results and display them
 def print_results(results):
     for location_id, items in results.items():
+        print('\n')
         for item in items:
+#            print('\n')
             for a in item.find_all('a'):
+                print('\n')
                 print(LOCATIONS[location_id])
                 caption_soup = BeautifulSoup(a['caption'], 'html.parser')
                 caption_p = caption_soup.find_all('p')
+                megalist = []
                 for p in caption_p:
-                    print(p.text)
+#                   returns .....
+#                      name/make/model for [0]
+#                      useless string [1]
+#                      availablity [2]
+                    list_results = []
+                    if p.parent.name != 'p':
+                      #print(p.text)
+                      list_results.append(p.text)
+#                   returns.....
+#                   other details
+                    else:
+                      list_results.append(p.text)
+                    #del results[1]
+                    #print(list_results)
+                    megalist.append(list_results)
+                del megalist[1]
+                del megalist[6]
+#                print(megalist[0])
+#                print(", ".join(megalist[0]))
+                for i in megalist:
+#                    print(i)
+                    print(", ".join(i))
 
 
 if __name__ == '__main__':

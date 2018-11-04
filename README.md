@@ -1,11 +1,11 @@
 # pnp_scavenger
 Scripts to crawl through certain pick and pull junk yards, with ease.             \
 You'll need python3 and the following python3 modules (I use pip3 install)        \
-... BeautifulSoup
-... cookiejar
-... cookies
-... requests
-... lxml
+... BeautifulSoup                                                                 \
+... cookiejar                                                                     \
+... cookies                                                                       \
+... requests                                                                      \
+... lxml                                                                          \
 
 
 Usage:                                                                            \

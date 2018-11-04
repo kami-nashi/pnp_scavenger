@@ -89,8 +89,9 @@ if __name__ == '__main__':
           print("No matches")
           sys.exit(0)
 
-      fmt = '%15s %10s %4s %6s %11s'
+      fmt = '%20s %7s %7s %7s %10s %15s'
       print(location)
-      print(fmt % ('Make', 'Model', 'Year', 'Row', 'Date-In'))
+      print(fmt % ('Year/Make/Model', 'Section', 'Row', 'Space', 'Color', 'Date In'))
       for match in matches:
-          print(fmt % tuple(match))
+          ymm = match[2], match[0], match[1]
+          print(fmt % (" ".join(ymm), ".......", match[3], ".....", ".....", match[4]))

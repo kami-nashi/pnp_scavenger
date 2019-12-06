@@ -1,7 +1,5 @@
 FROM centos:7
 
-FROM registry.access.redhat.com/rhel7:latest
-
 LABEL maintainer="Ashley Young" \
       summary="Searches Junk Yards For Stuff" \
       description="Scrape junk inventories for things and stuff, return them in easier to read format"
